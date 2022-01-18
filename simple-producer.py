@@ -9,7 +9,7 @@ def openDb():
        user="root",
        password="",
        db="db_kafka" )
-   cursor = conn.cursor()	
+   cursor = conn.cursor()   
 
 #db closing conn
 def closeDb():
@@ -32,15 +32,18 @@ if __name__ == '__main__':
     # Create Producer instance
     p = Producer(**conf)
 
-    try:
-        # Produce line (without newline)
-        topic = "bukan_testing"
-        msg = "tidak tahu"
-        p.produce(topic, msg, callback=delivery_callback)
-           
-    except BufferError:
-        sys.stderr.write('%% Local producer queue is full (%d messages awaiting delivery): try again\n' %
-                            len(p))
+    topic = "bukan_testing"
+    # msg = "tidak tahu"
+
+    # Read lines from stdin, produce each line to Kafka
+    for line in sys.stdin:
+        try:
+            # Produce line (without newline)
+            p.produce(topic, line.rstrip(), callback=delivery_callback)
+
+        except BufferError:
+            sys.stderr.write('%% Local producer queue is full (%d messages awaiting delivery): try again\n' %
+                             len(p))
 
         # Serve delivery callback queue.
         # NOTE: Since produce() is an asynchronous API this poll() call
@@ -51,3 +54,6 @@ if __name__ == '__main__':
     # Wait until all messages have been delivered
     sys.stderr.write('%% Waiting for %d deliveries\n' % len(p))
     p.flush()
+
+
+    
