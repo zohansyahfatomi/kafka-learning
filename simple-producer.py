@@ -33,7 +33,6 @@ if __name__ == '__main__':
     p = Producer(**conf)
 
     topic = "bukan_testing"
-    # msg = "tidak tahu"
 
     # Read lines from stdin, produce each line to Kafka
     for line in sys.stdin:
@@ -55,5 +54,5 @@ if __name__ == '__main__':
     sys.stderr.write('%% Waiting for %d deliveries\n' % len(p))
     p.flush()
 
-
+#ini testing pakai gpg
     
