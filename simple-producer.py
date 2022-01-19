@@ -1,3 +1,4 @@
+import json
 from confluent_kafka import Producer
 import sys, pymysql
 
@@ -33,26 +34,36 @@ if __name__ == '__main__':
     p = Producer(**conf)
 
     topic = "bukan_testing"
+    msg = "tidak tahu"
 
+    msg = {"message":"test_message"}
+    msg = json.dumps(msg)
+    msg = msg.encode("utf-8")
+
+
+    p.produce(topic, msg, callback=delivery_callback)
+
+    '''
     # Read lines from stdin, produce each line to Kafka
     for line in sys.stdin:
         try:
             # Produce line (without newline)
-            p.produce(topic, line.rstrip(), callback=delivery_callback)
+            p.produce(topic, msg, callback=delivery_callback)
 
         except BufferError:
             sys.stderr.write('%% Local producer queue is full (%d messages awaiting delivery): try again\n' %
                              len(p))
 
         # Serve delivery callback queue.
-        # NOTE: Since produce() is an asynchronous API this poll() call
+        #  NOTE: Since produce() is an asynchronous API this poll() call
         #       will most likely not serve the delivery callback for the
         #       last produce()d message.
         p.poll(0)
+    '''
 
     # Wait until all messages have been delivered
     sys.stderr.write('%% Waiting for %d deliveries\n' % len(p))
     p.flush()
 
-#ini testing pakai gpg
+
     

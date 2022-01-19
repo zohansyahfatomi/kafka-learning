@@ -71,3 +71,5 @@ if __name__ == '__main__':
         # Close down consumer to commit final offsets.
         c.close()
 
+# https://gist.github.com/paolocarrasco/18ca8fe6e63490ae1be23e84a7039374
+
